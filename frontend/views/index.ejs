@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piston - Trouve ou propose tes compétences</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+
+<style>
+body{font-family:'Inter',system-ui,sans-serif;}
+.hero-bg{background:linear-gradient(135deg,#1e2937 0%,#334155 100%);}
+.card-hover{transition:all .3s ease;}
+.card-hover:hover{
+transform:translateY(-8px);
+box-shadow:0 20px 25px -5px rgb(0 0 0 /.1),0 8px 10px -6px rgb(0 0 0 /.1);
+}
+</style>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+
+<nav class="bg-white shadow-md sticky top-0 z-50">
+
+<div class="max-w-7xl mx-auto flex justify-between items-center px-8 py-5">
+
+    <!-- Paramètres + Solde -->
+
+    <div class="flex items-center gap-4">
+
+    <!-- Paramètres -->
+        <button
+            onclick="window.location.href='/settings'"
+            class="flex items-center gap-2 px-4 py-2 rounded-2xl hover:bg-gray-100 transition">
+
+            <i class="fa-solid fa-gear text-gray-700 text-lg"></i>
+
+            <span class="font-semibold text-gray-700">
+                Paramètres
+            </span>
+
+        </button>
+
+    <!-- Solde -->
+
+        <button
+            onclick="window.location.href='/wallet'"
+            class="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-2xl hover:bg-green-200 transition">
+
+            <i class="fa-solid fa-wallet text-lg"></i>
+
+            <span class="font-bold">
+                Solde : 0 FCFA
+            </span>
+
+        </button>
+
+    </div>
+
+    <!-- Menu -->
+
+    <div class="hidden md:flex items-center gap-10 font-medium">
+
+        <!-- Catégories -->
+
+        <div class="relative">
+
+        <button
+        id="btnCategories"
+        class="hover:text-blue-600 transition">
+
+        Catégories
+        <i class="fa-solid fa-chevron-down ml-1"></i>
+
+        </button>
+
+        <div
+        id="menuCategories"
+        class="hidden absolute mt-3 w-72 bg-white rounded-xl shadow-xl border z-50">
+
+        </div>
+
+    </div>
+
+
+        <!-- Talents -->
+
+        <a
+        href="/professionnels"
+        class="hover:text-blue-600">
+
+            Talents enregistrés
+
+        </a>
+
+    </div>
+
+
+    <!-- Boutons -->
+
+    <div class="flex items-center gap-4">
+
+    <% if(user){ %>
+
+    <span class="font-bold text-blue-600">
+
+    Bonjour <%= user.nom %>
+
+    </span>
+
+    <button
+    onclick="window.location.href='/logout'"
+    class="px-6 py-2 bg-red-600 text-white rounded-2xl">
+
+    Déconnexion
+
+    </button>
+
+    <% }else{ %>
+
+    <button
+    onclick="window.location.href='/login'"
+    class="px-6 py-2 rounded-2xl">
+
+    Se connecter
+
+    </button>
+
+    <button
+    onclick="window.location.href='/register'"
+    class="px-6 py-2 bg-blue-600 text-white rounded-2xl">
+
+    Créer un compte
+
+    </button>
+
+    <% } %>
+
+    </div>
+    </div>
+
+    </nav>
+
+<section class="hero-bg text-white py-24">
+<div class="max-w-5xl mx-auto px-6 text-center">
+<h1 class="text-5xl md:text-6xl font-bold mb-6">
+Connecte tes compétences<br>avec ceux qui en ont besoin
+</h1>
+
+<p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10">
+Dépose tes compétences, ton expérience et tes coordonnées.
+Trouve rapidement des clients, freelances ou partenaires.
+</p>
+
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button onclick="window.location.href='/register'" class="px-10 py-4 text-lg bg-white text-gray-900 rounded-3xl">
+Je propose mes compétences
+</button>
+
+<button onclick="window.location.href='/login'" class="px-10 py-4 border-2 border-white rounded-3xl">
+Je cherche un talent
+</button>
+</div>
+
+<div class="max-w-4xl mx-auto mt-10">
+
+<form action="/search-results" method="GET">
+
+<div class="bg-white rounded-3xl p-3 flex gap-2 shadow-xl">
+
+<input
+type="text"
+name="metier"
+placeholder="Métier (plombier, développeur, avocat...)"
+class="flex-1 px-4 py-3 outline-none text-gray-800">
+
+<input
+type="text"
+name="ville"
+placeholder="Ville"
+class="flex-1 px-4 py-3 outline-none text-gray-800">
+
+<button
+type="submit"
+class="bg-blue-600 text-white px-8 rounded-2xl">
+
+Rechercher
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<p class="text-sm text-gray-400 mt-6">Gratuit • Simple • Local & International</p>
+</div>
+</section>
+
+<section id="avis" class="bg-gray-100 py-24">
+
+<div class="max-w-6xl mx-auto">
+
+<h2 class="text-4xl font-bold text-center mb-14">
+
+Ce que pensent nos utilisateurs
+
+</h2>
+
+<div class="grid md:grid-cols-3 gap-8">
+
+<div class="bg-white rounded-3xl p-8 shadow">
+
+<div class="text-yellow-500 text-2xl">
+
+★★★★★
+
+</div>
+
+<p class="mt-5 italic text-gray-700">
+
+Aucun avis pour le moment.
+
+</p>
+
+<p class="mt-4 font-bold">
+
+Soyez le premier à partager votre expérience.
+
+</p>
+
+</div>
+
+<div class="bg-white rounded-3xl p-8 shadow">
+
+<div class="text-yellow-500 text-2xl">
+
+★★★★★
+
+</div>
+
+<p class="mt-5 italic text-gray-700">
+
+Votre témoignage apparaîtra ici après validation.
+
+</p>
+
+<p class="mt-4 font-bold">
+
+Communauté Piston
+
+</p>
+
+</div>
+
+<div class="bg-white rounded-3xl p-8 shadow">
+
+<div class="text-yellow-500 text-2xl">
+
+★★★★★
+
+</div>
+
+<p class="mt-5 italic text-gray-700">
+
+Les avis sont écrits par les utilisateurs de la plateforme.
+
+</p>
+
+<p class="mt-4 font-bold">
+
+Avis authentiques
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="py-16 bg-white">
+<div class="max-w-7xl mx-auto px-6">
+<h2 class="text-3xl font-bold text-center mb-10">Catégories les plus demandées</h2>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="bg-gray-100 p-6 rounded-3xl text-center card-hover">
+<i class="fa-solid fa-code text-4xl text-blue-600 mb-4"></i>
+<p class="font-semibold">Développement Web</p>
+</div>
+
+<div class="bg-gray-100 p-6 rounded-3xl text-center card-hover">
+<i class="fa-solid fa-camera text-4xl text-blue-600 mb-4"></i>
+<p class="font-semibold">Photographie</p>
+</div>
+
+<div class="bg-gray-100 p-6 rounded-3xl text-center card-hover">
+<i class="fa-solid fa-paintbrush text-4xl text-blue-600 mb-4"></i>
+<p class="font-semibold">Graphisme</p>
+</div>
+
+<div class="bg-gray-100 p-6 rounded-3xl text-center card-hover">
+<i class="fa-solid fa-truck text-4xl text-blue-600 mb-4"></i>
+<p class="font-semibold">Logistique</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Pourquoi choisir Piston -->
+
+<section class="max-w-7xl mx-auto py-24 px-6">
+
+<h2 class="text-4xl font-bold text-center mb-16">
+
+Pourquoi choisir Piston ?
+
+</h2>
+
+<div class="grid md:grid-cols-3 gap-10">
+
+<a href="/guide-recherche"
+class="bg-white rounded-3xl shadow-lg p-10 text-center hover:shadow-2xl transition block">
+
+<div class="text-5xl mb-6">🔎</div>
+
+<h3 class="text-2xl font-bold mb-4">
+Recherche rapide
+</h3>
+
+<p class="text-gray-600">
+Apprenez à utiliser efficacement la recherche Piston.
+</p>
+
+<p class="mt-6 text-blue-600 font-bold">
+En savoir plus →
+</p>
+
+</a>
+
+
+<a href="/guide-fiabilite"
+class="bg-white rounded-3xl shadow-lg p-10 text-center hover:shadow-2xl transition block">
+
+<div class="text-5xl mb-6">🛡️</div>
+
+<h3 class="text-2xl font-bold mb-4">
+Profils fiables
+</h3>
+
+<p class="text-gray-600">
+Découvrez comment Piston protège ses utilisateurs.
+</p>
+
+<p class="mt-6 text-blue-600 font-bold">
+En savoir plus →
+</p>
+
+</a>
+
+
+<a href="/guide-contact"
+class="bg-white rounded-3xl shadow-lg p-10 text-center hover:shadow-2xl transition block">
+
+<div class="text-5xl mb-6">💬</div>
+
+<h3 class="text-2xl font-bold mb-4">
+Contact direct
+</h3>
+
+<p class="text-gray-600">
+Apprenez à contacter efficacement un professionnel.
+</p>
+
+<p class="mt-6 text-blue-600 font-bold">
+En savoir plus →
+</p>
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="py-20 bg-white">
+<div class="max-w-6xl mx-auto px-6">
+<h2 class="text-3xl font-bold text-center mb-12">Comment ça marche ?</h2>
+
+<div class="grid md:grid-cols-4 gap-8 text-center">
+
+<div
+onclick="window.location='/register'"
+class="cursor-pointer bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition">
+
+<div class="text-5xl mb-4">1️⃣</div>
+
+<p class="font-bold">
+Crée ton profil
+</p>
+
+</div>
+
+
+<div
+onclick="window.location='/professionnels'"
+class="cursor-pointer bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition">
+
+<div class="text-5xl mb-4">2️⃣</div>
+
+<p class="font-bold">
+Publie tes compétences
+</p>
+
+</div>
+
+
+<div
+onclick="window.location='/demandes'"
+class="cursor-pointer bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition">
+
+<div class="text-5xl mb-4">3️⃣</div>
+
+<p class="font-bold">
+Reçois des demandes
+</p>
+
+</div>
+
+
+<div
+onclick="window.location='/argent'"
+class="cursor-pointer bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition">
+
+<div class="text-5xl mb-4">4️⃣</div>
+
+<p class="font-bold">
+Gagne de l'argent
+</p>
+
+</div>
+
+</div>
+</div>
+</section>
+
+
+<footer class="bg-gray-900 text-gray-400 py-12">
+<div class="max-w-7xl mx-auto px-6 text-center">
+<div class="flex items-center justify-center gap-3 mb-6">
+<div class="w-8 h-8 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold">P</div>
+<span class="text-2xl font-bold text-white">Piston</span>
+</div>
+<p>© 2026 Piston - Plateforme de mise en relation de compétences</p>
+</div>
+</footer>
+
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+
+AOS.init();
+
+async function chargerCategories() {
+
+    const menu = document.getElementById("categoriesMenu");
+
+    try {
+
+        const reponse = await fetch("/categories");
+
+        const categories = await reponse.json();
+
+        if(categories.length === 0){
+
+            menu.innerHTML = `
+                <p class="text-gray-500">
+                    Aucune catégorie disponible
+                </p>
+            `;
+
+            return;
+
+        }
+
+        menu.innerHTML = "";
+
+        categories.forEach(cat => {
+
+            menu.innerHTML += `
+
+                <a
+                href="/search-results?metier=${encodeURIComponent(cat.metier)}"
+                class="flex justify-between p-3 rounded-xl hover:bg-gray-100">
+
+                    <span>${cat.metier}</span>
+
+                    <span class="text-blue-600 font-bold">
+
+                        ${cat.total}
+
+                    </span>
+
+                </a>
+
+            `;
+
+        });
+
+    }
+
+    catch(error){
+
+        menu.innerHTML = `
+            <p class="text-red-500">
+                Impossible de charger les catégories.
+            </p>
+        `;
+
+        console.error(error);
+
+    }
+
+}
+
+chargerCategories();
+
+</script>
+<script>
+
+const btn = document.getElementById("btnCategories");
+const menu = document.getElementById("menuCategories");
+
+btn.onclick = async () => {
+
+    if(menu.classList.contains("hidden")){
+
+        const res = await fetch("/categories");
+        const data = await res.json();
+
+        menu.innerHTML = "";
+
+        data.forEach(cat=>{
+
+            menu.innerHTML += `
+                <a
+                href="/search-results?metier=${encodeURIComponent(cat.metier)}"
+                class="block px-5 py-3 hover:bg-gray-100">
+
+                    ${cat.metier}
+                    (${cat.total})
+
+                </a>
+            `;
+
+        });
+
+        menu.classList.remove("hidden");
+
+    }
+
+    else{
+
+        menu.classList.add("hidden");
+
+    }
+
+}
+
+document.addEventListener("click",(e)=>{
+
+    if(!btn.contains(e.target) && !menu.contains(e.target)){
+
+        menu.classList.add("hidden");
+
+    }
+
+});
+
+</script>
+</body>
+</html>

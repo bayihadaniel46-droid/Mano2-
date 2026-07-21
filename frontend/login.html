@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Connexion</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100">
+
+<div class="max-w-md mx-auto mt-20">
+
+<div class="bg-white rounded-3xl shadow-xl p-10">
+
+<h1 class="text-4xl font-bold text-center mb-10">
+
+Connexion
+
+</h1>
+
+<form action="/login" method="POST">
+
+<label class="font-semibold">
+
+Adresse email
+
+</label>
+
+<input
+
+type="email"
+
+name="email"
+
+placeholder="Votre adresse email"
+
+required
+
+class="w-full border rounded-xl p-3 mt-2 mb-6">
+
+<label class="font-semibold">
+
+Mot de passe
+
+</label>
+
+<input
+
+type="password"
+
+name="password"
+
+placeholder="Votre mot de passe"
+
+required
+
+class="w-full border rounded-xl p-3 mt-2">
+
+<button
+
+type="submit"
+
+class="w-full bg-blue-600 text-white py-4 rounded-2xl mt-8 text-lg">
+
+Se connecter
+
+</button>
+
+</form>
+
+<div class="text-center mt-8">
+
+<a
+
+href="/register"
+
+class="text-blue-600 font-semibold">
+
+Créer un compte
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
