@@ -28,7 +28,7 @@ box-shadow:0 20px 25px -5px rgb(0 0 0 /.1),0 8px 10px -6px rgb(0 0 0 /.1);
 
     <!-- Paramètres + Solde -->
 
-    <div class="flex items-center gap-4">
+    <div class="desktop-actions flex items-center gap-4">
 
     <!-- Paramètres -->
         <button
@@ -61,8 +61,7 @@ box-shadow:0 20px 25px -5px rgb(0 0 0 /.1),0 8px 10px -6px rgb(0 0 0 /.1);
 
     <!-- Menu -->
 
-    <div class="hidden md:flex items-center gap-10 font-medium">
-
+    <div class="desktop-menu hidden md:flex items-center gap-10 font-medium">
         <!-- Catégories -->
 
         <div class="relative">
@@ -100,7 +99,7 @@ box-shadow:0 20px 25px -5px rgb(0 0 0 /.1),0 8px 10px -6px rgb(0 0 0 /.1);
 
     <!-- Boutons -->
 
-    <div class="flex gap-4">
+    <div class="desktop-buttons flex gap-4">
 
         <button onclick="window.location.href='/login'" class="px-6 py-2.5 rounded-2xl">
         Se connecter
@@ -114,9 +113,162 @@ box-shadow:0 20px 25px -5px rgb(0 0 0 /.1),0 8px 10px -6px rgb(0 0 0 /.1);
 
 </div>
 
+<!-- ========================= -->
+<!-- Version Mobile -->
+<!-- ========================= -->
+
+<div class="mobile-logo">
+
+    <!-- Menu -->
+
+    <div class="mobile-menu">
+
+        <i class="fa-solid fa-bars"></i>
+
+    </div>
+
+    <!-- Logo -->
+
+    <div class="text-2xl font-bold text-blue-600">
+
+        Piston
+
+    </div>
+
+    <!-- Icônes -->
+
+    <div class="mobile-actions">
+
+        <div
+        class="mobile-action"
+        onclick="window.location.href='/wallet'">
+
+            <i class="fa-solid fa-wallet"></i>
+
+        </div>
+
+        <div
+        class="mobile-action"
+        onclick="window.location.href='/settings'">
+
+            <i class="fa-solid fa-gear"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- MENU MOBILE -->
+<!-- ========================= -->
+
+<div id="mobileDrawer"
+
+class="fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50
+transform -translate-x-full transition-transform duration-300">
+
+    <div class="p-6">
+
+        <div class="flex justify-between items-center">
+
+            <h2 class="text-3xl font-bold text-blue-600">
+
+                Piston
+
+            </h2>
+
+            <button id="closeDrawer">
+
+                <i class="fa-solid fa-xmark text-2xl"></i>
+
+            </button>
+
+        </div>
+
+        <hr class="my-6">
+
+        <a
+        href="/"
+        class="flex items-center gap-4 py-4 hover:text-blue-600">
+
+            <i class="fa-solid fa-house"></i>
+
+            Accueil
+
+        </a>
+
+        <a
+        href="#"
+        class="flex items-center gap-4 py-4 hover:text-blue-600">
+
+            <i class="fa-solid fa-layer-group"></i>
+
+            Catégories
+
+        </a>
+
+        <a
+        href="/professionnels"
+        class="flex items-center gap-4 py-4 hover:text-blue-600">
+
+            <i class="fa-solid fa-users"></i>
+
+            Talents enregistrés
+
+        </a>
+
+        <a
+        href="/wallet"
+        class="flex items-center gap-4 py-4 hover:text-blue-600">
+
+            <i class="fa-solid fa-wallet"></i>
+
+            Solde
+
+        </a>
+
+        <a
+        href="/settings"
+        class="flex items-center gap-4 py-4 hover:text-blue-600">
+
+            <i class="fa-solid fa-gear"></i>
+
+            Paramètres
+
+        </a>
+
+        <hr class="my-6">
+
+        <a
+        href="/login"
+        class="block bg-gray-100 rounded-xl text-center py-3">
+
+            Se connecter
+
+        </a>
+
+        <a
+        href="/register"
+        class="block bg-blue-600 text-white rounded-xl text-center py-3 mt-4">
+
+            Créer un compte
+
+        </a>
+
+    </div>
+
+</div>
+
+<div id="overlay"
+
+class="fixed inset-0 bg-black/50 hidden z-40">
+
+</div>
+
 </nav>
 
-<section class="hero-bg text-white py-24">
+<section class="hero hero-bg text-white py-24">
 <div class="max-w-5xl mx-auto px-6 text-center">
 <h1 class="text-5xl md:text-6xl font-bold mb-6">
 Connecte tes compétences<br>avec ceux qui en ont besoin
@@ -141,23 +293,23 @@ Je cherche un talent
 
 <form action="/search-results" method="GET">
 
-<div class="bg-white rounded-3xl p-3 flex gap-2 shadow-xl">
+<div class="bg-white rounded-3xl p-3 flex flex-col md:flex-row gap-3 shadow-xl">
 
 <input
 type="text"
 name="metier"
 placeholder="Métier (plombier, développeur, avocat...)"
-class="flex-1 px-4 py-3 outline-none text-gray-800">
+class="w-full md:flex-1 px-4 py-3 outline-none text-gray-800"
 
 <input
 type="text"
 name="ville"
 placeholder="Ville"
-class="flex-1 px-4 py-3 outline-none text-gray-800">
+class="w-full md:flex-1 px-4 py-3 outline-none text-gray-800"
 
 <button
 type="submit"
-class="bg-blue-600 text-white px-8 rounded-2xl">
+class="w-full md:w-auto bg-blue-600 text-white px-8 py-4 rounded-2xl"
 
 Rechercher
 
@@ -554,6 +706,41 @@ document.addEventListener("click",(e)=>{
     }
 
 });
+
+</script>
+<script>
+
+const drawer=document.getElementById("mobileDrawer");
+
+const overlay=document.getElementById("overlay");
+
+const menu=document.querySelector(".mobile-menu");
+
+const close=document.getElementById("closeDrawer");
+
+menu.onclick=()=>{
+
+drawer.classList.remove("-translate-x-full");
+
+overlay.classList.remove("hidden");
+
+};
+
+close.onclick=()=>{
+
+drawer.classList.add("-translate-x-full");
+
+overlay.classList.add("hidden");
+
+};
+
+overlay.onclick=()=>{
+
+drawer.classList.add("-translate-x-full");
+
+overlay.classList.add("hidden");
+
+};
 
 </script>
 </body>
