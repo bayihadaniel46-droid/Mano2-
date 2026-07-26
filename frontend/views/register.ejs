@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Créer un compte - Mano2</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link rel="stylesheet" href="/css/dark.css">
+
+</head>
+
+<body class="bg-zinc-950 text-white">
+
+<div class="min-h-screen flex items-center justify-center px-5 py-10">
+
+<div class="w-full max-w-xl">
+
+<!-- Logo -->
+
+<div class="text-center mb-10">
+
+<div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto shadow-xl">
+
+<span class="text-5xl font-bold text-black">
+
+M
+
+</span>
+
+</div>
+
+<h1 class="text-5xl font-bold mt-6">
+
+Mano2
+
+</h1>
+
+<p class="text-zinc-400 mt-2">
+
+Rejoins la communauté des talents.
+
+</p>
+
+</div>
+
+<!-- Carte -->
+
+<div class="bg-zinc-900 rounded-3xl p-8 shadow-2xl border border-zinc-800">
+
+<form action="/register" method="POST">
+
+<!-- Nom -->
+
+<div class="mb-5">
+
+<label class="block mb-2 font-semibold">
+
+Nom complet
+
+</label>
+
+<div class="flex items-center bg-zinc-800 rounded-2xl px-4">
+
+<i class="fa-solid fa-user text-zinc-400"></i>
+
+<input
+
+type="text"
+
+name="nom"
+
+required
+
+placeholder="Votre nom"
+
+class="w-full bg-transparent p-4 outline-none">
+
+</div>
+
+</div>
+
+<!-- Métier -->
+
+<div class="mb-5">
+
+<label class="block mb-2 font-semibold">
+
+Métier
+
+</label>
+
+<div class="flex items-center bg-zinc-800 rounded-2xl px-4">
+
+<i class="fa-solid fa-briefcase text-zinc-400"></i>
+
+<input
+
+type="text"
+
+name="metier"
+
+required
+
+placeholder="Développeur, Plombier..."
+
+class="w-full bg-transparent p-4 outline-none">
+
+</div>
+
+</div>
+
+<!-- Ville -->
+
+<div class="mb-5">
+
+<label class="block mb-2 font-semibold">
+
+Ville
+
+</label>
+
+<div class="flex items-center bg-zinc-800 rounded-2xl px-4">
+
+<i class="fa-solid fa-location-dot text-zinc-400"></i>
+
+<input
+
+type="text"
+
+name="ville"
+
+required
+
+placeholder="Votre ville"
+
+class="w-full bg-transparent p-4 outline-none">
+
+</div>
+
+</div>
+
+<!-- Téléphone -->
+
+<div class="mb-5">
+
+<label class="block mb-2 font-semibold">
+
+Téléphone
+
+</label>
+
+<div class="flex items-center bg-zinc-800 rounded-2xl px-4">
+
+<i class="fa-solid fa-phone text-zinc-400"></i>
+
+<input
+
+type="text"
+
+name="telephone"
+
+required
+
+placeholder="+237..."
+
+class="w-full bg-transparent p-4 outline-none">
+
+</div>
+
+</div>
+
+<!-- Email -->
+
+<div class="mb-5">
+
+<label class="block mb-2 font-semibold">
+
+Adresse email
+
+</label>
+
+<div class="flex items-center bg-zinc-800 rounded-2xl px-4">
+
+<i class="fa-solid fa-envelope text-zinc-400"></i>
+
+<input
+
+type="email"
+
+name="email"
+
+required
+
+placeholder="exemple@email.com"
+
+class="w-full bg-transparent p-4 outline-none">
+
+</div>
+
+</div>
+
+<!-- Mot de passe -->
+
+<div class="mb-5">
+
+<label class="block mb-2 font-semibold">
+
+Mot de passe
+
+</label>
+
+<div class="flex items-center bg-zinc-800 rounded-2xl px-4">
+
+<i class="fa-solid fa-lock text-zinc-400"></i>
+
+<input
+
+type="password"
+
+name="password"
+
+required
+
+placeholder="********"
+
+class="w-full bg-transparent p-4 outline-none">
+
+</div>
+
+</div>
+
+<!-- Description -->
+
+<div class="mb-6">
+
+<label class="block mb-2 font-semibold">
+
+Description
+
+</label>
+
+<textarea
+
+name="description"
+
+rows="4"
+
+placeholder="Présentez-vous..."
+
+class="w-full bg-zinc-800 rounded-2xl p-4 outline-none resize-none">
+
+</textarea>
+
+</div>
+
+<!-- Conditions -->
+
+<label class="flex items-center gap-3 mb-8 cursor-pointer">
+
+<input type="checkbox" required>
+
+<span>
+
+J'accepte les conditions d'utilisation.
+
+</span>
+
+</label>
+
+<!-- Bouton -->
+
+<button
+
+class="w-full bg-white text-black font-bold py-4 rounded-2xl hover:scale-105 duration-300">
+
+Créer mon compte
+
+</button>
+
+</form>
+
+<div class="text-center mt-8 text-zinc-400">
+
+Déjà inscrit ?
+
+<a href="/login" class="text-white font-bold">
+
+Se connecter
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

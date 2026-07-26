@@ -1,0 +1,47 @@
+<!-- ================================= -->
+<!-- Header Mobile -->
+<!-- ================================= -->
+
+<header class="lg:hidden sticky top-0 z-40 bg-white border-b">
+
+    <div class="h-16 flex items-center justify-between px-4">
+
+        <!-- Retour -->
+
+        <button
+        onclick="history.back()"
+        class="w-10 h-10 rounded-xl hover:bg-gray-100 flex items-center justify-center">
+
+            <i class="fa-solid fa-arrow-left text-xl text-gray-700"></i>
+
+        </button>
+
+        <!-- Titre -->
+
+        <h1 class="text-xl font-bold text-gray-900">
+
+            <%= title %>
+
+        </h1>
+
+        <!-- Bouton droit -->
+
+        <% if(typeof rightIcon !== "undefined" && rightIcon){ %>
+
+            <button
+            onclick="<%= rightAction %>"
+            class="w-10 h-10 rounded-xl hover:bg-gray-100 flex items-center justify-center">
+
+                <i class="<%= rightIcon %> text-xl text-gray-700"></i>
+
+            </button>
+
+        <% }else{ %>
+
+            <div class="w-10"></div>
+
+        <% } %>
+
+    </div>
+
+</header>

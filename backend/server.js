@@ -20,7 +20,7 @@ app.set(
 
 app.use(session({
 
-    secret: "piston-secret",
+    secret: "Mano2-secret",
 
     resave: false,
 
@@ -104,8 +104,16 @@ app.post("/login", (req, res) => {
 
 });
 
+// ===========================
+// PAGE INSCRIPTION
+// ===========================
+
 app.get("/register", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/register.html"));
+
+    res.render("register", {
+        user: req.session.user || null
+    });
+
 });
 
 app.get("/profile", (req, res) => {
@@ -337,7 +345,7 @@ app.get("/professionnels", (req,res)=>{
 
             <script src="https://cdn.tailwindcss.com"></script>
 
-            <title>Piston</title>
+            <title>Mano2</title>
 
             </head>
 
@@ -1994,262 +2002,7 @@ Envoyer
 });
 
 });
-// ===============================
-// PARAMÈTRES
-// ===============================
 
-app.get("/settings", (req, res) => {
-
-    res.send(`
-
-<!DOCTYPE html>
-
-<html lang="fr">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Paramètres - Piston</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-</head>
-
-<body class="bg-gray-100">
-
-<div class="max-w-7xl mx-auto py-10 px-6">
-
-<h1 class="text-5xl font-bold mb-10">
-
-⚙️ Paramètres
-
-</h1>
-
-<div class="grid md:grid-cols-4 gap-8">
-
-<!-- Menu -->
-
-<div class="bg-white rounded-3xl shadow-lg p-6">
-
-<h2 class="text-xl font-bold mb-6">
-
-Navigation
-
-</h2>
-
-<div class="space-y-3">
-
-<a href="/profile"
-class="block p-4 rounded-xl hover:bg-blue-50">
-
-👤 Mon profil
-
-</a>
-
-<a href="/wallet"
-class="block p-4 rounded-xl hover:bg-blue-50">
-
-💰 Mon portefeuille
-
-</a>
-
-<a href="/professionnels"
-class="block p-4 rounded-xl hover:bg-blue-50">
-
-💼 Mes services
-
-</a>
-
-<a href="/"
-class="block p-4 rounded-xl hover:bg-blue-50">
-
-🏠 Accueil
-
-</a>
-
-</div>
-
-</div>
-
-<!-- Contenu -->
-
-<div class="md:col-span-3 space-y-6">
-
-<!-- Compte -->
-
-<div class="bg-white rounded-3xl shadow-lg p-8">
-
-<h2 class="text-2xl font-bold mb-6">
-
-👤 Compte
-
-</h2>
-
-<div class="space-y-4">
-
-<button onclick="window.location='/profile'"
-class="w-full flex justify-between items-center p-5 bg-gray-100 rounded-2xl hover:bg-gray-200">
-
-<span>Modifier mon profil</span>
-
-<i class="fa-solid fa-chevron-right"></i>
-
-</button>
-
-<button onclick="alert('Fonction bientôt disponible')"
-class="w-full flex justify-between items-center p-5 bg-gray-100 rounded-2xl hover:bg-gray-200">
-
-<span>Changer ma photo</span>
-
-<i class="fa-solid fa-chevron-right"></i>
-
-</button>
-
-<button onclick="alert('Fonction bientôt disponible')"
-class="w-full flex justify-between items-center p-5 bg-gray-100 rounded-2xl hover:bg-gray-200">
-
-<span>Modifier mon mot de passe</span>
-
-<i class="fa-solid fa-chevron-right"></i>
-
-</button>
-
-</div>
-
-</div>
-
-<!-- Profession -->
-
-<div class="bg-white rounded-3xl shadow-lg p-8">
-
-<h2 class="text-2xl font-bold mb-6">
-
-💼 Profession
-
-</h2>
-
-<div class="space-y-4">
-
-<button class="w-full flex justify-between items-center p-5 bg-gray-100 rounded-2xl">
-
-<span>Modifier mon métier</span>
-
-<i class="fa-solid fa-chevron-right"></i>
-
-</button>
-
-<button class="w-full flex justify-between items-center p-5 bg-gray-100 rounded-2xl">
-
-<span>Modifier ma description</span>
-
-<i class="fa-solid fa-chevron-right"></i>
-
-</button>
-
-<button class="w-full flex justify-between items-center p-5 bg-gray-100 rounded-2xl">
-
-<span>Modifier ma ville</span>
-
-<i class="fa-solid fa-chevron-right"></i>
-
-</button>
-
-</div>
-
-</div>
-
-<!-- Notifications -->
-
-<div class="bg-white rounded-3xl shadow-lg p-8">
-
-<h2 class="text-2xl font-bold mb-6">
-
-🔔 Notifications
-
-</h2>
-
-<div class="flex justify-between items-center mb-5">
-
-<span>Recevoir les nouveaux messages</span>
-
-<input type="checkbox" checked class="w-6 h-6">
-
-</div>
-
-<div class="flex justify-between items-center">
-
-<span>Recevoir les nouvelles demandes</span>
-
-<input type="checkbox" checked class="w-6 h-6">
-
-</div>
-
-</div>
-
-<!-- Confidentialité -->
-
-<div class="bg-white rounded-3xl shadow-lg p-8">
-
-<h2 class="text-2xl font-bold mb-6">
-
-🛡️ Confidentialité
-
-</h2>
-
-<div class="space-y-4">
-
-<button class="w-full flex justify-between items-center p-5 bg-gray-100 rounded-2xl">
-
-<span>Qui peut voir mon profil ?</span>
-
-<span>Public</span>
-
-</button>
-
-<button class="w-full flex justify-between items-center p-5 bg-gray-100 rounded-2xl">
-
-<span>Masquer mon téléphone</span>
-
-<span>OFF</span>
-
-</button>
-
-</div>
-
-</div>
-
-<!-- Déconnexion -->
-
-<div class="bg-white rounded-3xl shadow-lg p-8">
-
-<button
-onclick="window.location='/login'"
-class="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-2xl text-xl font-bold">
-
-🚪 Déconnexion
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</body>
-
-</html>
-
-`);
-
-});
 app.get("/wallet", (req, res) => {
 
     res.send(`
@@ -2356,13 +2109,27 @@ res.redirect("/");
 });
 
 });
+app.get("/settings", (req, res) => {
+
+    res.render("settings");
+
+});
+app.get("/notifications", (req, res) => {
+
+    res.render("notifications",{
+
+        user:req.session.user
+
+    });
+
+});
 app.listen(PORT,()=>{
 
     console.log("");
 
     console.log("==============================");
 
-    console.log("Piston est lancé.");
+    console.log("Mano2 est lancé.");
 
     console.log("http://localhost:"+PORT);
 

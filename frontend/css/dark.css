@@ -1,0 +1,228 @@
+/* ==========================================
+        MANO2 DARK THEME
+========================================== */
+
+body{
+    background:#0f1115;
+    color:#ffffff;
+}
+
+/* ================= NAVBAR ================= */
+
+nav{
+    background:#171a21 !important;
+    border-bottom:1px solid #2a2d36;
+}
+
+nav a,
+nav span,
+nav button{
+    color:white !important;
+}
+
+nav button:hover{
+    background:#252932 !important;
+}
+
+/* ================= CARTES ================= */
+
+.bg-white{
+    background:#1a1d24 !important;
+}
+
+.bg-gray-50{
+    background:#0f1115 !important;
+}
+
+.bg-gray-100{
+    background:#20242d !important;
+}
+
+.bg-gray-200{
+    background:#2b303b !important;
+}
+
+/* ================= TEXTE ================= */
+
+.text-gray-900{
+    color:white !important;
+}
+
+.text-gray-800{
+    color:#eeeeee !important;
+}
+
+.text-gray-700{
+    color:#dddddd !important;
+}
+
+.text-gray-600{
+    color:#b6bcc6 !important;
+}
+
+.text-gray-500{
+    color:#9ca3af !important;
+}
+
+.text-gray-400{
+    color:#808793 !important;
+}
+
+/* ================= HERO ================= */
+
+.hero-bg{
+    background:
+    linear-gradient(
+        180deg,
+        #111318,
+        #191d25
+    ) !important;
+}
+
+/* ================= INPUTS ================= */
+
+input,
+textarea,
+select{
+
+    background:#252932 !important;
+
+    border:1px solid #383d48 !important;
+
+    color:white !important;
+
+}
+
+input::placeholder,
+textarea::placeholder{
+
+    color:#888;
+
+}
+
+/* ================= BOUTONS ================= */
+
+button{
+
+    transition:.25s;
+
+}
+
+button:hover{
+
+    opacity:.9;
+
+}
+
+/* Boutons noirs */
+
+.btn-dark{
+
+    background:white;
+
+    color:#111;
+
+}
+
+/* ================= DRAWER ================= */
+
+#mobileDrawer{
+
+    background:#171a21 !important;
+
+    color:white;
+
+}
+
+#mobileDrawer a{
+
+    color:white;
+
+}
+
+#mobileDrawer a:hover{
+
+    background:#252932 !important;
+
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+
+    background:#111318 !important;
+
+    color:#9ca3af !important;
+
+}
+
+/* ================= OMBRES ================= */
+
+.shadow,
+.shadow-lg,
+.shadow-xl,
+.shadow-2xl{
+
+    box-shadow:
+    0 10px 35px rgba(0,0,0,.45) !important;
+
+}
+
+/* ================= BORDURES ================= */
+
+.border,
+.border-t{
+
+    border-color:#2f3540 !important;
+
+}
+
+/* ================= ICÔNES ================= */
+
+i{
+
+    color:white;
+
+}
+
+/* ================= LIENS ================= */
+
+a{
+
+    transition:.25s;
+
+}
+
+a:hover{
+
+    color:#ffffff;
+
+}
+
+/* ================= SCROLLBAR ================= */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#111;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#444;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#666;
+
+}

@@ -1,0 +1,37 @@
+<!-- ================================= -->
+<!-- Navigation du bas (Mobile uniquement) -->
+<!-- ================================= -->
+
+<div class="fixed bottom-0 left-0 w-full bg-white border-t shadow-xl lg:hidden z-50">
+
+    <div class="grid grid-cols-2 h-16">
+
+        <!-- Explorer -->
+        <a
+        href="/"
+        class="flex flex-col items-center justify-center <%= activePage === 'home' ? 'text-blue-600' : 'text-gray-500' %>">
+
+            <i class="fa-solid fa-compass text-2xl"></i>
+
+            <span class="text-xs mt-1 font-semibold">
+                Explorer
+            </span>
+
+        </a>
+
+        <!-- Paramètres -->
+        <a
+        href="/settings"
+        class="flex flex-col items-center justify-center <%= activePage === 'settings' ? 'text-blue-600' : 'text-gray-500' %>">
+
+            <i class="fa-solid fa-sliders text-2xl"></i>
+
+            <span class="text-xs mt-1 font-semibold">
+                Paramètres
+            </span>
+
+        </a>
+
+    </div>
+
+</div>
