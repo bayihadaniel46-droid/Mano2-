@@ -395,13 +395,45 @@ Trouve rapidement des clients, freelances ou partenaires.
 </p>
 
 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-<button onclick="window.location.href='/register'" class="px-10 py-4 text-lg bg-white text-gray-900 rounded-3xl">
+
+<% if(user){ %>
+
+<button
+onclick="window.location.href='/profile'"
+class="px-10 py-4 text-lg bg-white text-gray-900 rounded-3xl">
+
 Je propose mes compétences
+
 </button>
 
-<button onclick="window.location.href='/login'" class="px-10 py-4 border-2 border-white rounded-3xl">
+<button
+onclick="window.location.href='/professionnels'"
+class="px-10 py-4 border-2 border-white rounded-3xl">
+
 Je cherche un talent
+
 </button>
+
+<% } else { %>
+
+<button
+onclick="window.location.href='/register'"
+class="px-10 py-4 text-lg bg-white text-gray-900 rounded-3xl">
+
+Je propose mes compétences
+
+</button>
+
+<button
+onclick="window.location.href='/login'"
+class="px-10 py-4 border-2 border-white rounded-3xl">
+
+Je cherche un talent
+
+</button>
+
+<% } %>
+
 </div>
 
 <div class="max-w-4xl mx-auto mt-10">
@@ -633,7 +665,7 @@ En savoir plus →
 <div class="max-w-6xl mx-auto px-6">
 <h2 class="text-3xl font-bold text-center mb-12">Comment ça marche ?</h2>
 
-<div class="grid md:grid-cols-4 gap-8 text-center">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto text-center">
 
 <div
 onclick="window.location='/register'"
