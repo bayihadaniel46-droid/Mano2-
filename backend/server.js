@@ -123,7 +123,39 @@ app.get("/profile", (req, res) => {
 app.get("/search", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/search.html"));
 });
+app.get("/edit-profile", (req, res) => {
 
+    if (!req.session.user) {
+
+        return res.redirect("/login");
+
+    }
+
+    db.get(
+
+        "SELECT * FROM users WHERE id=?",
+
+        [req.session.user.id],
+
+        (err, user) => {
+
+            if (err || !user) {
+
+                return res.send("Utilisateur introuvable");
+
+            }
+
+            res.render("edit-profile", {
+
+                user
+
+            });
+
+        }
+
+    );
+
+});
 
 // ==================================
 // Recherche de professionnels
@@ -660,6 +692,31 @@ app.get("/profil/:id",(req,res)=>{
                         `;
 
                     });
+                    
+                    let boutonSupprimer = "";
+
+                    if (
+                        req.session.user &&
+                        Number(req.session.user.id) === Number(user.id)
+                    ) {
+
+                        boutonSupprimer = `
+                        <form
+                            action="/delete-user/${user.id}"
+                            method="POST">
+
+                            <button
+                                onclick="return confirm('Voulez-vous vraiment supprimer votre profil ?')"
+                                class="bg-red-600 text-white px-8 py-3 rounded-xl">
+
+                                🗑 Supprimer mon profil
+
+                            </button>
+
+                        </form>
+                        `;
+
+                    }
 
                     html+=`
 
@@ -680,20 +737,9 @@ app.get("/profil/:id",(req,res)=>{
                     📥 Ma boîte de réception
 
                     </a>
+                    
+                    ${boutonSupprimer}
 
-                    <form
-                    action="/delete-user/${user.id}"
-                    method="POST">
-
-                    <button
-                    onclick="return confirm('Voulez-vous vraiment supprimer ce profil ?')"
-                    class="bg-red-600 text-white px-8 py-3 rounded-xl">
-
-                    🗑 Supprimer ce profil
-
-                    </button>
-
-                    </form>
 
                     </div>
 
@@ -841,61 +887,42 @@ app.post("/review", (req, res) => {
     );
 
 });
-// ======================
-// Démarrage
-// ======================
+
 // ======================
 // Supprimer un professionnel
 // ======================
-
 app.post("/delete-user/:id", (req, res) => {
 
-    const id = req.params.id;
+    if (!req.session.user) {
 
-    // On supprime d'abord les avis
+        return res.redirect("/login");
+
+    }
+
+    if (req.session.user.id != req.params.id) {
+
+        return res.status(403).send("Accès interdit");
+
+    }
 
     db.run(
+        "DELETE FROM users WHERE id=?",
+        [req.params.id],
+        (err) => {
 
-        "DELETE FROM reviews WHERE user_id = ?",
+            if (err) {
 
-        [id],
-
-        function(err){
-
-            if(err){
-
-                console.log(err);
+                return res.send("Erreur");
 
             }
 
-            // Puis le professionnel
+            req.session.destroy(() => {
 
-            db.run(
+                res.redirect("/");
 
-                "DELETE FROM users WHERE id = ?",
-
-                [id],
-
-                function(err){
-
-                    if(err){
-
-                        console.log(err);
-
-                        return res.send("Erreur de suppression");
-
-                    }
-
-                    console.log("Professionnel supprimé.");
-
-                    res.redirect("/professionnels");
-
-                }
-
-            );
+            });
 
         }
-
     );
 
 });
@@ -2121,6 +2148,91 @@ app.get("/notifications", (req, res) => {
         user:req.session.user
 
     });
+
+});
+app.get("/workspace", (req, res) => {
+
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+
+    db.get(
+        "SELECT * FROM users WHERE id = ?",
+        [req.session.user.id],
+        (err, user) => {
+
+            if (err || !user) {
+                return res.redirect("/");
+            }
+
+            res.render("workspace", {
+                user
+            });
+
+        }
+    );
+
+});
+app.post("/update-profile", (req, res) => {
+
+    if (!req.session.user) {
+
+        return res.redirect("/login");
+
+    }
+
+    const {
+
+        nom,
+        metier,
+        ville,
+        telephone,
+        email,
+        description
+
+    } = req.body;
+
+    db.run(
+
+        `UPDATE users
+        SET
+        nom=?,
+        metier=?,
+        ville=?,
+        telephone=?,
+        email=?,
+        description=?
+        WHERE id=?`,
+
+        [
+
+            nom,
+            metier,
+            ville,
+            telephone,
+            email,
+            description,
+            req.session.user.id
+
+        ],
+
+        function(err){
+
+            if(err){
+
+                console.log(err);
+
+                return res.send("Erreur.");
+
+            }
+
+            req.session.user.nom = nom;
+
+            res.redirect("/");
+
+        }
+
+    );
 
 });
 app.listen(PORT,()=>{
