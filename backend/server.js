@@ -39,9 +39,29 @@ app.use("/images", express.static(path.join(__dirname, "../frontend/images")));
 // ===========================
 app.get("/", (req,res)=>{
 
-    res.render("index",{
+    db.get("SELECT COUNT(*) AS totalUsers FROM users",(err,userResult)=>{
 
-        user:req.session.user
+        db.get("SELECT COUNT(*) AS totalReviews, ROUND(AVG(note),1) AS averageRating FROM reviews",(err,reviewResult)=>{
+
+            db.get("SELECT COUNT(DISTINCT ville) AS totalCities FROM users",(err,cityResult)=>{
+
+                res.render("index",{
+
+                    user:req.session.user,
+
+                    totalUsers:userResult.totalUsers || 0,
+
+                    totalReviews:reviewResult.totalReviews || 0,
+
+                    averageRating:reviewResult.averageRating || 0,
+
+                    totalCities:cityResult.totalCities || 0
+
+                });
+
+            });
+
+        });
 
     });
 

@@ -339,7 +339,7 @@ z-50 -translate-x-full transition-transform duration-300">
         href="/edit-profile"
         class="bg-blue-600 text-white px-6 py-3 rounded-xl">
 
-            ---mon profil---
+            mon profil
 
         </a>
 
@@ -385,9 +385,6 @@ class="fixed inset-0 bg-black/40 hidden z-40">
 
 <section class="hero hero-bg text-white py-24">
 <div class="max-w-5xl mx-auto px-6 text-center">
-<h1 class="text-5xl md:text-6xl font-bold mb-6">
-Connecte tes compétences<br>avec ceux qui en ont besoin
-</h1>
 
 <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10">
 Dépose tes compétences, ton expérience et tes coordonnées.
@@ -472,79 +469,103 @@ Je cherche un talent
 </div>
 </section>
 
-<section id="avis" class="bg-gray-100 py-24">
+<section class="py-24 bg-gray-100">
 
-<div class="max-w-6xl mx-auto">
+<div class="max-w-7xl mx-auto px-6">
 
-<h2 class="text-4xl font-bold text-center mb-14">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
 
-Ce que pensent nos utilisateurs
+<!-- Utilisateurs -->
 
-</h2>
+<div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition">
 
-<div class="grid md:grid-cols-3 gap-8">
+<div class="text-2xl mb-3">
 
-<div class="bg-white rounded-3xl p-8 shadow">
-
-<div class="text-yellow-500 text-2xl">
-
-★★★★★
+👥
 
 </div>
 
-<p class="mt-5 italic text-gray-700">
+<h3 class="text-4xl font-bold text-gray-900">
 
-Aucun avis pour le moment.
+<%= totalUsers %>
 
-</p>
+</h3>
 
-<p class="mt-4 font-bold">
+<p class="text-gray-500 mt-3">
 
-Soyez le premier à partager votre expérience.
+Utilisateurs
 
 </p>
 
 </div>
 
-<div class="bg-white rounded-3xl p-8 shadow">
+<!-- Note -->
 
-<div class="text-yellow-500 text-2xl">
+<div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition">
 
-★★★★★
+<div class="text-2xl mb-3">
 
-</div>
-
-<p class="mt-5 italic text-gray-700">
-
-Votre témoignage apparaîtra ici après validation.
-
-</p>
-
-<p class="mt-4 font-bold">
-
-Communauté Mano2
-
-</p>
+⭐
 
 </div>
 
-<div class="bg-white rounded-3xl p-8 shadow">
+<h3 class="text-4xl font-bold text-gray-900">
 
-<div class="text-yellow-500 text-2xl">
+<%= averageRating %>/5
 
-★★★★★
+</h3>
 
-</div>
+<p class="text-gray-500 mt-3">
 
-<p class="mt-5 italic text-gray-700">
-
-Les avis sont écrits par les utilisateurs de la plateforme.
+Note Mano2
 
 </p>
 
-<p class="mt-4 font-bold">
+</div>
 
-Avis authentiques
+<!-- Avis -->
+
+<div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition">
+
+<div class="text-2xl mb-3">
+
+💬
+
+</div>
+
+<h3 class="text-4xl font-bold text-gray-900">
+
+<%= totalReviews %>
+
+</h3>
+
+<p class="text-gray-500 mt-3">
+
+Avis publiés
+
+</p>
+
+</div>
+
+<!-- Villes -->
+
+<div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-1xl hover:-translate-y-2 transition">
+
+<div class="text-2xl mb-3">
+
+🌍
+
+</div>
+
+<h3 class="text-3xl font-bold text-gray-900">
+
+<%= totalCities %>
+
+</h3>
+
+<p class="text-gray-500 mt-2">
+
+Villes couvertes
 
 </p>
 
@@ -671,7 +692,7 @@ En savoir plus →
 onclick="window.location='/register'"
 class="cursor-pointer bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition">
 
-<div class="text-5xl mb-4">1️⃣</div>
+<div class="text-3xl mb-3">1️⃣</div>
 
 <p class="font-bold">
 Crée ton profil
@@ -684,7 +705,7 @@ Crée ton profil
 onclick="window.location='/professionnels'"
 class="cursor-pointer bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition">
 
-<div class="text-5xl mb-4">2️⃣</div>
+<div class="text-3xl mb-3">2️⃣</div>
 
 <p class="font-bold">
 Publie tes compétences
@@ -697,7 +718,7 @@ Publie tes compétences
 onclick="window.location='/demandes'"
 class="cursor-pointer bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition">
 
-<div class="text-5xl mb-4">3️⃣</div>
+<div class="text-3xl mb-3">3️⃣</div>
 
 <p class="font-bold">
 Reçois des demandes
@@ -710,7 +731,7 @@ Reçois des demandes
 onclick="window.location='/argent'"
 class="cursor-pointer bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition">
 
-<div class="text-5xl mb-4">4️⃣</div>
+<div class="text-3xl mb-3">4️⃣</div>
 
 <p class="font-bold">
 Gagne de l'argent
@@ -765,7 +786,7 @@ Gagne de l'argent
 <footer class="bg-gray-900 text-gray-400 py-12">
 <div class="max-w-7xl mx-auto px-6 text-center">
 <div class="flex items-center justify-center gap-3 mb-6">
-<div class="w-8 h-8 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold">P</div>
+<div class="w-8 h-8 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold">M</div>
 <span class="text-2xl font-bold text-white">Mano2</span>
 </div>
 <p>© 2026 Mano2 - Plateforme de mise en relation de compétences</p>
@@ -929,4 +950,4 @@ overlay.addEventListener("click", () => {
 
 </script>
 </body>
-</html> voici mon index.ejs 
+</html>

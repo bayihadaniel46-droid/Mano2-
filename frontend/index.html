@@ -325,79 +325,115 @@ Rechercher
 </div>
 </section>
 
-<section id="avis" class="bg-gray-100 py-24">
+<section class="py-24 bg-gray-100">
 
-<div class="max-w-6xl mx-auto">
+<div class="max-w-7xl mx-auto px-6">
 
-<h2 class="text-4xl font-bold text-center mb-14">
+<h2 class="text-4xl font-bold text-center">
 
-Ce que pensent nos utilisateurs
+Mano2 en quelques chiffres
 
 </h2>
 
-<div class="grid md:grid-cols-3 gap-8">
+<p class="text-center text-gray-500 mt-4 mb-16">
 
-<div class="bg-white rounded-3xl p-8 shadow">
-
-<div class="text-yellow-500 text-2xl">
-
-★★★★★
-
-</div>
-
-<p class="mt-5 italic text-gray-700">
-
-Aucun avis pour le moment.
+Les statistiques sont mises à jour automatiquement.
 
 </p>
 
-<p class="mt-4 font-bold">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
 
-Soyez le premier à partager votre expérience.
+<!-- Utilisateurs -->
 
-</p>
+<div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition">
 
-</div>
+<div class="text-5xl mb-5">
 
-<div class="bg-white rounded-3xl p-8 shadow">
-
-<div class="text-yellow-500 text-2xl">
-
-★★★★★
+👥
 
 </div>
 
-<p class="mt-5 italic text-gray-700">
+<h3 class="text-4xl font-bold text-gray-900">
 
-Votre témoignage apparaîtra ici après validation.
+<%= totalUsers %>
 
-</p>
+</h3>
 
-<p class="mt-4 font-bold">
+<p class="text-gray-500 mt-3">
 
-Communauté Piston
+Utilisateurs
 
 </p>
 
 </div>
 
-<div class="bg-white rounded-3xl p-8 shadow">
+<!-- Note -->
 
-<div class="text-yellow-500 text-2xl">
+<div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition">
 
-★★★★★
+<div class="text-5xl mb-5">
+
+⭐
 
 </div>
 
-<p class="mt-5 italic text-gray-700">
+<h3 class="text-4xl font-bold text-gray-900">
 
-Les avis sont écrits par les utilisateurs de la plateforme.
+<%= averageRating %>/5
+
+</h3>
+
+<p class="text-gray-500 mt-3">
+
+Note Mano2
 
 </p>
 
-<p class="mt-4 font-bold">
+</div>
 
-Avis authentiques
+<!-- Avis -->
+
+<div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition">
+
+<div class="text-5xl mb-5">
+
+💬
+
+</div>
+
+<h3 class="text-4xl font-bold text-gray-900">
+
+<%= totalReviews %>
+
+</h3>
+
+<p class="text-gray-500 mt-3">
+
+Avis publiés
+
+</p>
+
+</div>
+
+<!-- Villes -->
+
+<div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition">
+
+<div class="text-5xl mb-5">
+
+🌍
+
+</div>
+
+<h3 class="text-4xl font-bold text-gray-900">
+
+<%= totalCities %>
+
+</h3>
+
+<p class="text-gray-500 mt-3">
+
+Villes couvertes
 
 </p>
 
