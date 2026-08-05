@@ -1731,6 +1731,13 @@ Retour
 `);
 
 });
+app.get("/communaute-whatsapp", (req, res) => {
+
+    const whatsappLink = "https://chat.whatsapp.com/KyRQx3TAsyk4ymprn3oWod?mode=gi_t";
+
+    res.redirect(whatsappLink);
+
+});
 // ==========================
 // Boîte de réception
 // ==========================
