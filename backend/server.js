@@ -1877,61 +1877,6 @@ app.get("/communaute-whatsapp", (req, res) => {
 // ==========================
 // Boîte de réception
 // ==========================
-app.post("/message",(req,res)=>{
-
-const{
-    expediteur,
-    destinataire,
-    message
-}=req.body;
-
-const date=new Date().toLocaleString("fr-FR");
-
-db.run(
-
-`
-INSERT INTO messages
-(
-expediteur,
-expediteur_email,
-destinataire_id,
-sujet,
-message,
-date
-)
-VALUES(?,?,?,?,?,?)
-`,
-
-[
-expediteur,
-"",
-destinataire,
-"Message",
-message,
-date
-],
-
-function(err){
-
-if(err){
-console.log(err);
-return res.send(err.message);
-}
-
-createNotification(
-    destinataire,
-    "message",
-    "Nouveau message",
-    `${expediteur} vous a envoyé un message.`
-);
-
-res.redirect("/boite/"+destinataire);
-
-}
-
-);
-
-});
 app.post("/message/:id", (req, res) => {
 
     const destinataireId = req.params.id;
