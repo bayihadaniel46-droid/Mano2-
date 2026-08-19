@@ -35,27 +35,163 @@ app.use("/js", express.static(path.join(__dirname, "../frontend/js")));
 app.use("/images", express.static(path.join(__dirname, "../frontend/images")));
 
 // ===========================
+// Notifications
+// ===========================
+
+function formatNotificationTime(dateStr) {
+
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMins = Math.floor((now - date) / 60000);
+    const diffHours = Math.floor((now - date) / 3600000);
+
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const notifDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (notifDay.getTime() === today.getTime()) {
+        if (diffMins < 1) return "À l'instant";
+        if (diffMins < 60) return `Il y a ${diffMins} minute${diffMins > 1 ? "s" : ""}`;
+        return `Il y a ${diffHours} heure${diffHours > 1 ? "s" : ""}`;
+    }
+
+    if (notifDay.getTime() === yesterday.getTime()) {
+        return `Hier à ${date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`;
+    }
+
+    return date.toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+}
+
+function groupNotifications(notifications) {
+
+    const grouped = {
+        today: [],
+        yesterday: [],
+        older: []
+    };
+
+    const now = new Date();
+
+    const today = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+    );
+
+    const yesterday = new Date(today);
+
+    yesterday.setDate(
+        yesterday.getDate() - 1
+    );
+
+    notifications.forEach((n) => {
+
+        // La notification peut utiliser createdAt
+        // ou created_at selon son origine
+        const rawDate = n.createdAt || n.created_at;
+
+        const date = new Date(rawDate);
+
+        const notifDay = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate()
+        );
+
+        const item = {
+            ...n,
+
+            // Format utilisé par notifications.ejs
+            createdAt: rawDate,
+
+            // Format lisible
+            timeLabel: formatNotificationTime(rawDate),
+
+            // Format utilisé par le HTML
+            isRead: n.isRead !== undefined
+                ? n.isRead
+                : Number(n.lu) === 1
+        };
+
+        if (notifDay.getTime() === today.getTime()) {
+
+            grouped.today.push(item);
+
+        } else if (
+            notifDay.getTime() === yesterday.getTime()
+        ) {
+
+            grouped.yesterday.push(item);
+
+        } else {
+
+            grouped.older.push(item);
+
+        }
+
+    });
+
+    return grouped;
+
+}
+
+function getUnreadCount(userId, callback) {
+
+    if (!userId) return callback(null, 0);
+
+    db.get(
+        "SELECT COUNT(*) AS count FROM notifications WHERE user_id = ? AND lu = 0",
+        [userId],
+        (err, row) => callback(err, row ? row.count : 0)
+    );
+
+}
+
+function createNotification(userId, type, titre, message) {
+
+    db.run(
+        "INSERT INTO notifications (user_id, type, titre, message) VALUES (?, ?, ?, ?)",
+        [userId, type, titre, message]
+    );
+
+}
+
+
+// ===========================
 // Pages
 // ===========================
 app.get("/", (req,res)=>{
 
-    db.get("SELECT COUNT(*) AS totalUsers FROM users",(err,userResult)=>{
+    getUnreadCount(req.session.user?.id, (err, unreadCount) => {
 
-        db.get("SELECT COUNT(*) AS totalReviews, ROUND(AVG(note),1) AS averageRating FROM reviews",(err,reviewResult)=>{
+        db.get("SELECT COUNT(*) AS totalUsers FROM users",(err,userResult)=>{
 
-            db.get("SELECT COUNT(DISTINCT ville) AS totalCities FROM users",(err,cityResult)=>{
+            db.get("SELECT COUNT(*) AS totalReviews, ROUND(AVG(note),1) AS averageRating FROM reviews",(err,reviewResult)=>{
 
-                res.render("index",{
+                db.get("SELECT COUNT(DISTINCT ville) AS totalCities FROM users",(err,cityResult)=>{
 
-                    user:req.session.user,
+                    res.render("index",{
 
-                    totalUsers:userResult.totalUsers || 0,
+                        user:req.session.user,
 
-                    totalReviews:reviewResult.totalReviews || 0,
+                        unreadCount: unreadCount || 0,
 
-                    averageRating:reviewResult.averageRating || 0,
+                        totalUsers:userResult.totalUsers || 0,
 
-                    totalCities:cityResult.totalCities || 0
+                        totalReviews:reviewResult.totalReviews || 0,
+
+                        averageRating:reviewResult.averageRating || 0,
+
+                        totalCities:cityResult.totalCities || 0
+
+                    });
 
                 });
 
@@ -137,7 +273,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/profile.html"));
+    res.sendFile(path.join(__dirname, "../frontend/profile.ejs"));
 });
 
 app.get("/search", (req, res) => {
@@ -1782,11 +1918,68 @@ console.log(err);
 return res.send(err.message);
 }
 
+createNotification(
+    destinataire,
+    "message",
+    "Nouveau message",
+    `${expediteur} vous a envoyé un message.`
+);
+
 res.redirect("/boite/"+destinataire);
 
 }
 
 );
+
+});
+app.post("/message/:id", (req, res) => {
+
+    const destinataireId = req.params.id;
+    const expediteurId = req.session.user.id;
+    const message = req.body.message;
+
+    db.run(
+        `
+        INSERT INTO messages
+        (expediteur_id, destinataire_id, message)
+        VALUES (?, ?, ?)
+        `,
+        [expediteurId, destinataireId, message],
+        function(err) {
+
+            if (err) {
+                console.log(err);
+                return res.send("Erreur lors de l'envoi");
+            }
+
+            // Notification réelle
+            db.run(
+                `
+                INSERT INTO notifications
+                (user_id, type, titre, message, created_at, lu)
+                VALUES (?, ?, ?, ?, ?, ?)
+                `,
+                [
+                    destinataireId,
+                    "message",
+                    "Nouveau message",
+                    `${req.session.user.nom} vous a envoyé un message.`,
+                    new Date().toISOString(),
+                    0
+                ],
+                (notifErr) => {
+
+                    if (notifErr) {
+                        console.log("Erreur notification :", notifErr);
+                    }
+
+                    res.redirect(`/boite/${destinataireId}`);
+
+                }
+            );
+
+        }
+    );
 
 });
 app.get("/boite/:id",(req,res)=>{
@@ -2168,12 +2361,171 @@ app.get("/settings", (req, res) => {
     res.render("settings");
 
 });
+
+app.post("/notifications/read-all", (req, res) => {
+
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+
+    db.run(
+        "UPDATE notifications SET lu = 1 WHERE user_id = ?",
+        [req.session.user.id],
+        () => res.redirect("/notifications")
+    );
+
+});
+
 app.get("/notifications", (req, res) => {
 
-    res.render("notifications",{
+    // Utilisateur non connecté
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
 
-        user:req.session.user
+    const userId = req.session.user.id;
 
+    db.all(
+        `
+        SELECT
+            id,
+            user_id,
+            type,
+            title,
+            message,
+            link,
+            lu,
+            created_at
+        FROM notifications
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+        `,
+        [userId],
+
+        (err, notifications) => {
+
+            if (err) {
+
+                console.log("Erreur notifications :", err);
+
+                return res.status(500).send(
+                    "Erreur lors du chargement des notifications."
+                );
+
+            }
+
+            notifications = notifications || [];
+
+            // Nombre de notifications non lues
+            const unreadCount = notifications.filter(
+                n => Number(n.lu) === 0
+            ).length;
+
+            // Date actuelle
+            const now = new Date();
+
+            const today = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+            );
+
+            const yesterday = new Date(today);
+
+            yesterday.setDate(
+                yesterday.getDate() - 1
+            );
+
+            // Groupes
+            const grouped = {
+
+                today: [],
+
+                yesterday: [],
+
+                older: []
+
+            };
+
+            // Préparer les notifications
+            notifications.forEach(notification => {
+
+                const date = new Date(
+                    notification.created_at
+                );
+
+                const item = {
+
+                    _id: notification.id,
+
+                    id: notification.id,
+
+                    type: notification.type || "system",
+
+                    title: notification.title || "Notification",
+
+                    message: notification.message || "",
+
+                    link: notification.link || "#",
+
+                    createdAt: notification.created_at,
+
+                    isRead:
+                        Number(notification.lu) === 1
+
+                };
+
+                const notificationDay = new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate()
+                );
+
+                if (
+                    notificationDay.getTime() ===
+                    today.getTime()
+                ) {
+
+                    grouped.today.push(item);
+
+                }
+                else if (
+                    notificationDay.getTime() ===
+                    yesterday.getTime()
+                ) {
+
+                    grouped.yesterday.push(item);
+
+                }
+                else {
+
+                    grouped.older.push(item);
+
+                }
+
+            });
+
+            // Envoyer les données à EJS
+            res.render("notifications", {
+
+                user: req.session.user,
+
+                grouped: grouped,
+
+                unreadCount: unreadCount
+
+            });
+
+        }
+
+    );
+
+});
+
+app.get("/api/notifications/unread-count", (req, res) => {
+
+    getUnreadCount(req.session.user?.id, (err, count) => {
+        res.json({ count: count || 0 });
     });
 
 });
