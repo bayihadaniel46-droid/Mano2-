@@ -273,7 +273,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/profile.ejs"));
+    res.sendFile(path.join(__dirname, "../frontend/profile.html"));
 });
 
 app.get("/search", (req, res) => {
