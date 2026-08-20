@@ -1,153 +1,416 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Modifier mon profil</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdn.tailwindcss.com"></script>
+    <title>Mon profil - Mano2</title>
 
-<link rel="stylesheet" href="/css/dark.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link
+        rel="stylesheet"
+        href="/css/dark.css">
 
 </head>
 
-<body class="bg-gray-100">
 
-<%- include("partials/mobile-header",{title:"Modifier mon profil"}) %>
+<body class="bg-gray-100 text-gray-900">
 
-<div class="max-w-3xl mx-auto mt-8">
 
-<div class="bg-white rounded-3xl shadow-xl p-8">
+<!-- HEADER -->
 
-<h1 class="text-3xl font-bold mb-8">
+<header class="bg-white shadow-sm">
 
-Modifier mon profil
+    <div
+        class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
 
-</h1>
+        <a
+            href="/"
+            class="flex items-center gap-3">
 
-<form action="/update-profile" method="POST" class="space-y-6">
+            <div
+                class="w-10 h-10 rounded-xl bg-gray-900 text-white flex items-center justify-center font-bold">
 
-<div>
+                M
 
-<label class="font-semibold block mb-2">
+            </div>
 
-Nom complet
+            <span class="text-xl font-bold">
 
-</label>
+                Mano2
 
-<input
-type="text"
-name="nom"
-value="<%= user.nom %>"
-class="w-full border rounded-xl p-4">
+            </span>
 
-</div>
+        </a>
 
-<div>
 
-<label class="font-semibold block mb-2">
+        <div class="flex items-center gap-3">
 
-Métier
+            <a
+                href="/"
+                class="px-4 py-2 rounded-xl hover:bg-gray-100">
 
-</label>
+                Accueil
 
-<input
-type="text"
-name="metier"
-value="<%= user.metier %>"
-class="w-full border rounded-xl p-4">
+            </a>
 
-</div>
+            <a
+                href="/logout"
+                class="px-4 py-2 rounded-xl bg-gray-900 text-white">
 
-<div>
+                Déconnexion
 
-<label class="font-semibold block mb-2">
+            </a>
 
-Ville
+        </div>
 
-</label>
+    </div>
 
-<input
-type="text"
-name="ville"
-value="<%= user.ville %>"
-class="w-full border rounded-xl p-4">
+</header>
 
-</div>
 
-<div>
 
-<label class="font-semibold block mb-2">
+<!-- CONTENU -->
 
-Téléphone
+<main class="max-w-5xl mx-auto px-5 py-10">
 
-</label>
 
-<input
-type="text"
-name="telephone"
-value="<%= user.telephone %>"
-class="w-full border rounded-xl p-4">
+    <!-- TITRE -->
 
-</div>
+    <div class="mb-8">
 
-<div>
+        <h1 class="text-4xl font-bold">
 
-<label class="font-semibold block mb-2">
+            Mon profil
 
-Adresse email
+        </h1>
 
-</label>
+    </div>
 
-<input
-type="email"
-name="email"
-value="<%= user.email %>"
-class="w-full border rounded-xl p-4">
 
-</div>
 
-<div>
+    <!-- CARTE PROFIL -->
 
-<label class="font-semibold block mb-2">
+    <div
+        class="bg-white rounded-3xl shadow-lg overflow-hidden">
 
-Description
 
-</label>
+        <!-- BANNIÈRE -->
 
-<textarea
-name="description"
-rows="6"
-class="w-full border rounded-xl p-4"><%= user.description %></textarea>
+        <div class="h-32 bg-gray-900"></div>
 
-</div>
 
-<div class="flex gap-4">
+        <!-- PROFIL -->
 
-<button
-class="bg-green-600 text-white px-8 py-4 rounded-2xl">
+        <div class="px-6 md:px-10 pb-10">
 
-💾 Enregistrer
 
-</button>
+            <!-- AVATAR -->
 
-<a
-href="/"
-class="bg-gray-300 px-8 py-4 rounded-2xl">
+            <div class="-mt-16 mb-6">
 
-Annuler
+                <div
+                    class="w-32 h-32 rounded-full bg-white shadow-lg flex items-center justify-center border-4 border-white">
 
-</a>
+                    <div
+                        class="w-full h-full rounded-full bg-gray-900 text-white flex items-center justify-center">
 
-</div>
+                        <i class="fa-solid fa-user text-5xl"></i>
 
-</form>
+                    </div>
 
-</div>
+                </div>
 
-</div>
+            </div>
+
+
+
+            <!-- NOM -->
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+                <div>
+
+                    <h2 class="text-3xl font-bold">
+
+                        <%= user.nom || "Nom non renseigné" %>
+
+                    </h2>
+
+                    <p class="text-lg text-gray-500 mt-1">
+
+                        <%= user.metier || "Métier non renseigné" %>
+
+                    </p>
+
+                </div>
+
+
+                <!-- MODIFIER -->
+
+            </div>
+
+
+
+            <hr class="my-8">
+
+
+
+            <!-- INFORMATIONS -->
+
+            <div>
+
+                <h3 class="text-2xl font-bold mb-6">
+
+                    Informations
+
+                </h3>
+
+
+                <div class="grid md:grid-cols-2 gap-5">
+
+
+                    <!-- MÉTIER -->
+
+                    <div
+                        class="bg-gray-50 rounded-2xl p-5">
+
+                        <div class="flex items-center gap-4">
+
+                            <div
+                                class="w-12 h-12 rounded-xl bg-gray-900 text-white flex items-center justify-center">
+
+                                <i class="fa-solid fa-briefcase"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-sm text-gray-500">
+
+                                    Métier
+
+                                </p>
+
+                                <p class="font-bold">
+
+                                    <%= user.metier || "Non renseigné" %>
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- VILLE -->
+
+                    <div
+                        class="bg-gray-50 rounded-2xl p-5">
+
+                        <div class="flex items-center gap-4">
+
+                            <div
+                                class="w-12 h-12 rounded-xl bg-gray-900 text-white flex items-center justify-center">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-sm text-gray-500">
+
+                                    Ville
+
+                                </p>
+
+                                <p class="font-bold">
+
+                                    <%= user.ville || "Non renseignée" %>
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- TÉLÉPHONE -->
+
+                    <div
+                        class="bg-gray-50 rounded-2xl p-5">
+
+                        <div class="flex items-center gap-4">
+
+                            <div
+                                class="w-12 h-12 rounded-xl bg-gray-900 text-white flex items-center justify-center">
+
+                                <i class="fa-solid fa-phone"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-sm text-gray-500">
+
+                                    Téléphone
+
+                                </p>
+
+                                <p class="font-bold">
+
+                                    <%= user.telephone || "Non renseigné" %>
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- EMAIL -->
+
+                    <div
+                        class="bg-gray-50 rounded-2xl p-5">
+
+                        <div class="flex items-center gap-4">
+
+                            <div
+                                class="w-12 h-12 rounded-xl bg-gray-900 text-white flex items-center justify-center">
+
+                                <i class="fa-solid fa-envelope"></i>
+
+                            </div>
+
+                            <div class="min-w-0">
+
+                                <p class="text-sm text-gray-500">
+
+                                    Email
+
+                                </p>
+
+                                <p class="font-bold break-all">
+
+                                    <%= user.email || "Non renseigné" %>
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="mt-10">
+
+                <h3 class="text-2xl font-bold mb-5">
+
+                    À propos de moi
+
+                </h3>
+
+                <div
+                    class="bg-gray-50 rounded-2xl p-6">
+
+                    <% if (user.description) { %>
+
+                        <p class="text-gray-700 leading-relaxed whitespace-pre-line">
+
+                            <%= user.description %>
+
+                        </p>
+
+                    <% } else { %>
+
+                        <p class="text-gray-400 italic">
+
+                            Aucune description renseignée pour le moment.
+
+                        </p>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STATUT -->
+
+            <div class="mt-8">
+
+                <div
+                    class="flex items-center gap-3 bg-gray-50 rounded-2xl p-5">
+
+                    <div
+                        class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+
+                        <i class="fa-solid fa-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p class="font-bold">
+
+                            Profil actif
+
+                        </p>
+
+                        <p class="text-sm text-gray-500">
+
+                            Votre profil est visible sur Mano2.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<div class="h-20 lg:hidden"></div>
+
 
 </body>
+
 </html>

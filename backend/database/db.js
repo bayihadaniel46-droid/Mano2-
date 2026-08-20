@@ -1,4 +1,4 @@
-const sqlite3 = require("sqlite3").verbose();
+/*const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 
 const dbPath = path.join(__dirname, "piston.db");
@@ -6,6 +6,24 @@ const dbPath = path.join(__dirname, "piston.db");
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error(err.message);
+    } else {
+        console.log("Base de données connectée");
+    }
+});*/
+
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
+
+const dbPath = path.join(__dirname, "piston.db");
+
+console.log("=================================");
+console.log("BASE SQLITE UTILISÉE :");
+console.log(dbPath);
+console.log("=================================");
+
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+        console.error("Erreur SQLite :", err.message);
     } else {
         console.log("Base de données connectée");
     }

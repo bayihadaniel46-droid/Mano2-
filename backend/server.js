@@ -38,7 +38,7 @@ app.use("/images", express.static(path.join(__dirname, "../frontend/images")));
 // Notifications
 // ===========================
 
-function formatNotificationTime(dateStr) {
+function formatNotificationsTime(dateStr) {
 
     const date = new Date(dateStr);
     const now = new Date();
@@ -112,7 +112,7 @@ function groupNotifications(notifications) {
             createdAt: rawDate,
 
             // Format lisible
-            timeLabel: formatNotificationTime(rawDate),
+            timeLabel: formatNotificationsTime(rawDate),
 
             // Format utilisé par le HTML
             isRead: n.isRead !== undefined
@@ -154,16 +154,37 @@ function getUnreadCount(userId, callback) {
 
 }
 
-function createNotification(userId, type, titre, message) {
+function createNotifications(userId, type, titre, message) {
+
+    if (!userId) {
+        console.log("Impossible de créer la notification : userId manquant");
+        return;
+    }
 
     db.run(
-        "INSERT INTO notifications (user_id, type, titre, message) VALUES (?, ?, ?, ?)",
-        [userId, type, titre, message]
+        `
+        INSERT INTO notifications
+        (user_id, type, titre, message)
+        VALUES (?, ?, ?, ?)
+        `,
+        [userId, type, titre, message],
+        function (err) {
+
+            if (err) {
+                console.error(
+                    "Erreur création notification :",
+                    err
+                );
+                return;
+            }
+
+            console.log(
+                "Notification créée. ID :",
+                this.lastID
+            );
+        }
     );
-
 }
-
-
 // ===========================
 // Pages
 // ===========================
@@ -215,6 +236,65 @@ app.post("/login", (req, res) => {
 
     const { email, password } = req.body;
 
+    console.log("=================================");
+    console.log("TENTATIVE DE CONNEXION");
+    console.log("EMAIL :", email);
+    console.log("=================================");
+
+    db.get(
+        "SELECT * FROM users WHERE email = ?",
+        [email],
+        (err, user) => {
+
+            if (err) {
+
+                console.log("ERREUR LOGIN :", err);
+
+                return res.send("Erreur serveur");
+            }
+
+            if (!user) {
+
+                console.log(
+                    "UTILISATEUR INTROUVABLE :",
+                    email
+                );
+
+                return res.send(
+                    "Adresse email inconnue."
+                );
+            }
+
+            console.log(
+                "UTILISATEUR TROUVÉ :",
+                user.id,
+                user.email
+            );
+
+            if (user.password !== password) {
+
+                console.log("MOT DE PASSE INCORRECT");
+
+                return res.send(
+                    "Mot de passe incorrect."
+                );
+            }
+
+            req.session.user = {
+                id: user.id,
+                nom: user.nom,
+                email: user.email
+            };
+
+            res.redirect("/");
+        }
+    );
+});
+
+/*app.post("/login", (req, res) => {
+
+    const { email, password } = req.body;
+
     db.get(
 
         "SELECT * FROM users WHERE email = ?",
@@ -258,7 +338,7 @@ app.post("/login", (req, res) => {
 
     );
 
-});
+});*/
 
 // ===========================
 // PAGE INSCRIPTION
@@ -293,7 +373,7 @@ app.get("/profile", (req, res) => {
                 return res.send("Utilisateur introuvable");
             }
 
-            res.render("profil", {
+            res.render("profile", {
                 user: user
             });
 
@@ -946,6 +1026,34 @@ app.get("/profil/:id",(req,res)=>{
     );
 
 });
+app.get("/profil/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    db.get(
+        "SELECT * FROM users WHERE id = ?",
+        [id],
+        (err, user) => {
+
+            if (err) {
+                console.log("Erreur profil public :", err);
+                return res.status(500).send("Erreur serveur");
+            }
+
+            if (!user) {
+                return res.status(404).send(
+                    "Utilisateur introuvable"
+                );
+            }
+
+            res.render("profil", {
+                user: user
+            });
+
+        }
+    );
+
+});
 // ======================
 // Inscription
 // ======================
@@ -972,7 +1080,7 @@ app.post("/register", (req,res)=>{
     console.log(telephone);
     console.log(email);
 
-    db.run(
+    /*db.run(
 
         `
         INSERT INTO users
@@ -1016,6 +1124,49 @@ app.post("/register", (req,res)=>{
 
         }
 
+    );*/
+    db.run(
+
+        `
+        INSERT INTO users
+        (nom, metier, ville, telephone, description, email, password)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        `,
+        [
+            nom,
+            metier,
+            ville,
+            telephone,
+            description,
+            email,
+            password
+        ],
+        function(err) {
+
+            if (err) {
+
+                console.log("ERREUR INSCRIPTION :", err.message);
+
+                return res.send(
+                    "Erreur lors de la création du compte : " +
+                    err.message
+                );
+            }
+
+            console.log("=================================");
+            console.log("COMPTE CRÉÉ");
+            console.log("ID :", this.lastID);
+            console.log("EMAIL :", email);
+            console.log("=================================");
+
+            req.session.user = {
+                id: this.lastID,
+                nom: nom,
+                email: email
+            };
+
+            res.redirect("/");
+        }
     );
 
 });
@@ -2449,23 +2600,92 @@ app.get("/settings", (req, res) => {
 
 });
 
-app.post("/notifications/read-all", (req, res) => {
+app.post("/notifications/mark-all-read", (req, res) => {
 
     if (!req.session.user) {
-        return res.redirect("/login");
+        return res.status(401).json({
+            success: false
+        });
     }
 
     db.run(
-        "UPDATE notifications SET lu = 1 WHERE user_id = ?",
+        `
+        UPDATE notifications
+        SET lu = 1
+        WHERE user_id = ?
+        `,
         [req.session.user.id],
-        () => res.redirect("/notifications")
+
+        function (err) {
+
+            if (err) {
+
+                console.error(
+                    "Erreur lecture notifications :",
+                    err
+                );
+
+                return res.status(500).json({
+                    success: false
+                });
+            }
+
+            res.json({
+                success: true,
+                updated: this.changes
+            });
+
+        }
+    );
+
+});
+
+app.post("/notifications/:id/read", (req, res) => {
+
+    if (!req.session.user) {
+        return res.status(401).json({
+            success: false
+        });
+    }
+
+    db.run(
+        `
+        UPDATE notifications
+        SET lu = 1
+        WHERE id = ?
+        AND user_id = ?
+        `,
+        [
+            req.params.id,
+            req.session.user.id
+        ],
+
+        function (err) {
+
+            if (err) {
+
+                console.error(
+                    "Erreur notification :",
+                    err
+                );
+
+                return res.status(500).json({
+                    success: false
+                });
+            }
+
+            res.json({
+                success: true,
+                updated: this.changes
+            });
+
+        }
     );
 
 });
 
 app.get("/notifications", (req, res) => {
 
-    // Utilisateur non connecté
     if (!req.session.user) {
         return res.redirect("/login");
     }
@@ -2478,9 +2698,8 @@ app.get("/notifications", (req, res) => {
             id,
             user_id,
             type,
-            title,
+            titre,
             message,
-            link,
             lu,
             created_at
         FROM notifications
@@ -2493,22 +2712,22 @@ app.get("/notifications", (req, res) => {
 
             if (err) {
 
-                console.log("Erreur notifications :", err);
+                console.error(
+                    "Erreur notifications :",
+                    err
+                );
 
                 return res.status(500).send(
                     "Erreur lors du chargement des notifications."
                 );
-
             }
 
             notifications = notifications || [];
 
-            // Nombre de notifications non lues
             const unreadCount = notifications.filter(
                 n => Number(n.lu) === 0
             ).length;
 
-            // Date actuelle
             const now = new Date();
 
             const today = new Date(
@@ -2523,68 +2742,141 @@ app.get("/notifications", (req, res) => {
                 yesterday.getDate() - 1
             );
 
-            // Groupes
             const grouped = {
-
                 today: [],
-
                 yesterday: [],
-
                 older: []
-
             };
 
-            // Préparer les notifications
-            notifications.forEach(notification => {
+            notifications.forEach(n => {
 
-                const date = new Date(
-                    notification.created_at
+                const date = new Date(n.created_at);
+
+                let relativeTime = "";
+
+                const diffMs = now - date;
+                const diffMins = Math.floor(
+                    diffMs / 60000
                 );
 
-                const item = {
+                const diffHours = Math.floor(
+                    diffMs / 3600000
+                );
 
-                    _id: notification.id,
-
-                    id: notification.id,
-
-                    type: notification.type || "system",
-
-                    title: notification.title || "Notification",
-
-                    message: notification.message || "",
-
-                    link: notification.link || "#",
-
-                    createdAt: notification.created_at,
-
-                    isRead:
-                        Number(notification.lu) === 1
-
-                };
-
-                const notificationDay = new Date(
+                const notifDay = new Date(
                     date.getFullYear(),
                     date.getMonth(),
                     date.getDate()
                 );
 
+                /*
+                ========================================
+                DATE LISIBLE
+                ========================================
+                */
+
                 if (
-                    notificationDay.getTime() ===
+                    notifDay.getTime() ===
+                    today.getTime()
+                ) {
+
+                    if (diffMins < 1) {
+
+                        relativeTime = "À l'instant";
+
+                    } else if (diffMins < 60) {
+
+                        relativeTime =
+                            `Il y a ${diffMins} minute${diffMins > 1 ? "s" : ""}`;
+
+                    } else {
+
+                        relativeTime =
+                            `Il y a ${diffHours} heure${diffHours > 1 ? "s" : ""}`;
+                    }
+
+                } else if (
+                    notifDay.getTime() ===
+                    yesterday.getTime()
+                ) {
+
+                    relativeTime =
+                        `Hier à ${date.toLocaleTimeString(
+                            "fr-FR",
+                            {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            }
+                        )}`;
+
+                } else {
+
+                    relativeTime =
+                        date.toLocaleDateString(
+                            "fr-FR",
+                            {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            }
+                        );
+                }
+
+                /*
+                ========================================
+                OBJET ENVOYÉ À EJS
+                ========================================
+                */
+
+                const item = {
+
+                    _id: n.id,
+
+                    id: n.id,
+
+                    type: n.type || "system",
+
+                    title: n.titre || "Notification",
+
+                    message: n.message || "",
+
+                    /*
+                    Ta table actuelle ne possède
+                    pas encore de colonne link.
+                    */
+                    link: "#",
+
+                    createdAt: n.created_at,
+
+                    relativeTime: relativeTime,
+
+                    isRead:
+                        Number(n.lu) === 1
+                };
+
+                /*
+                ========================================
+                GROUPES
+                ========================================
+                */
+
+                if (
+                    notifDay.getTime() ===
                     today.getTime()
                 ) {
 
                     grouped.today.push(item);
 
-                }
-                else if (
-                    notificationDay.getTime() ===
+                } else if (
+                    notifDay.getTime() ===
                     yesterday.getTime()
                 ) {
 
                     grouped.yesterday.push(item);
 
-                }
-                else {
+                } else {
 
                     grouped.older.push(item);
 
@@ -2592,21 +2884,27 @@ app.get("/notifications", (req, res) => {
 
             });
 
-            // Envoyer les données à EJS
-            res.render("notifications", {
+            /*
+            ========================================
+            EJS
+            ========================================
+            */
 
-                user: req.session.user,
+            res.render(
+                "notifications",
+                {
 
-                grouped: grouped,
+                    user: req.session.user,
 
-                unreadCount: unreadCount
+                    grouped: grouped,
 
-            });
+                    unreadCount: unreadCount
+
+                }
+            );
 
         }
-
     );
-
 });
 
 app.get("/api/notifications/unread-count", (req, res) => {
