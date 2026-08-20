@@ -271,9 +271,35 @@ app.get("/register", (req, res) => {
     });
 
 });
-
 app.get("/profile", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/profile.html"));
+
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+
+    const userId = req.session.user.id;
+
+    db.get(
+        "SELECT * FROM users WHERE id = ?",
+        [userId],
+        (err, user) => {
+
+            if (err) {
+                console.log(err);
+                return res.send("Erreur serveur");
+            }
+
+            if (!user) {
+                return res.send("Utilisateur introuvable");
+            }
+
+            res.render("profil", {
+                user: user
+            });
+
+        }
+    );
+
 });
 
 app.get("/search", (req, res) => {
@@ -1874,14 +1900,88 @@ app.get("/communaute-whatsapp", (req, res) => {
     res.redirect(whatsappLink);
 
 });
+// ==========================================
+// OUVRIR UN MESSAGE DEPUIS UNE NOTIFICATION
+// ==========================================
+
+app.get("/message/:id", (req, res) => {
+
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+
+    const messageId = req.params.id;
+
+    db.get(
+        "SELECT * FROM messages WHERE id = ?",
+        [messageId],
+
+        (err, message) => {
+
+            if (err) {
+
+                console.log(
+                    "Erreur chargement message :",
+                    err
+                );
+
+                return res.status(500).send(
+                    "Impossible de charger le message."
+                );
+
+            }
+
+            if (!message) {
+
+                return res.status(404).send(
+                    "Message introuvable."
+                );
+
+            }
+
+            // Vérification de sécurité
+            if (
+                Number(message.destinataire_id) !==
+                Number(req.session.user.id)
+
+                &&
+
+                Number(message.expediteur_id) !==
+                Number(req.session.user.id)
+            ) {
+
+                return res.status(403).send(
+                    "Accès refusé."
+                );
+
+            }
+
+            // Aller dans la boîte de réception
+            res.redirect(
+                "/boite/" + req.session.user.id
+            );
+
+        }
+    );
+
+});
 // ==========================
-// Boîte de réception
+// ENVOYER UN MESSAGE
 // ==========================
+
 app.post("/message/:id", (req, res) => {
+
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
 
     const destinataireId = req.params.id;
     const expediteurId = req.session.user.id;
     const message = req.body.message;
+
+    if (!message || !message.trim()) {
+        return res.send("Le message est vide.");
+    }
 
     db.run(
         `
@@ -1889,36 +1989,78 @@ app.post("/message/:id", (req, res) => {
         (expediteur_id, destinataire_id, message)
         VALUES (?, ?, ?)
         `,
-        [expediteurId, destinataireId, message],
+        [
+            expediteurId,
+            destinataireId,
+            message.trim()
+        ],
+
         function(err) {
 
             if (err) {
-                console.log(err);
-                return res.send("Erreur lors de l'envoi");
+
+                console.log("Erreur message :", err);
+
+                return res.send(
+                    "Erreur lors de l'envoi du message."
+                );
+
             }
 
-            // Notification réelle
+            // ID réel du message qui vient d'être créé
+            const messageId = this.lastID;
+
+            console.log("Message créé :", messageId);
+
+            // ==========================
+            // CRÉER LA NOTIFICATION
+            // ==========================
+
             db.run(
                 `
                 INSERT INTO notifications
-                (user_id, type, titre, message, created_at, lu)
-                VALUES (?, ?, ?, ?, ?, ?)
+                (
+                    user_id,
+                    type,
+                    titre,
+                    message,
+                    link,
+                    created_at,
+                    lu
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 `,
+
                 [
                     destinataireId,
+
                     "message",
+
                     "Nouveau message",
+
                     `${req.session.user.nom} vous a envoyé un message.`,
+
+                    `/message/${messageId}`,
+
                     new Date().toISOString(),
+
                     0
                 ],
+
                 (notifErr) => {
 
                     if (notifErr) {
-                        console.log("Erreur notification :", notifErr);
+
+                        console.log(
+                            "Erreur notification :",
+                            notifErr
+                        );
+
                     }
 
-                    res.redirect(`/boite/${destinataireId}`);
+                    res.redirect(
+                        `/boite/${destinataireId}`
+                    );
 
                 }
             );

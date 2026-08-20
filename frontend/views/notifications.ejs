@@ -91,7 +91,7 @@
       <% if (grouped[section.key].length > 0) { %>
         <h2 class="text-gray-500 font-bold mb-3 mt-<%= section.key === 'today' ? '0' : '8' %>">
           <%= section.label %>
-        </h2>
+        </h2>*/*
 
         <% grouped[section.key].forEach(n => {
           const style = icons[n.type] || icons.system;
@@ -113,7 +113,7 @@
                   <% } %>
                 </div>
                 <p class="text-gray-600 mt-1 text-sm"><%= n.message %></p>
-                <p class="text-xs text-gray-400 mt-2"><%= n.relativeTime %></p>
+                <p class="text-xs text-gray-400 mt-2"><%= n.relativeTime %></p>0
               </div>
             </div>
           </a>
